@@ -1,7 +1,7 @@
 import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import Gastos from "./pages/Gastos";
-import Estudos from "./pages/estudos";
+import Estudos from "./pages/Estudos";
 
 function App() {
   return (
