@@ -1,4 +1,4 @@
-import { useTasks } from "../hooks/useTasks";
+import { useTasks } from "../hooks/useTasks"
 
 const diasDaSemana = [
   "Domingo",
@@ -8,24 +8,26 @@ const diasDaSemana = [
   "Quinta",
   "Sexta",
   "Sábado",
-];
+]
 
 export default function Dashboard() {
-  const { tasks, addTask, toggleTask, deleteTask } = useTasks();
-  const todayIndex = new Date().getDay();
+  const { tasks, addTask, toggleTask, deleteTask } = useTasks()
+  const todayIndex = new Date().getDay()
 
   function handleAddTask(day: string) {
-    const title = prompt(`Nova tarefa para ${day}`);
-    if (!title || !title.trim()) return;
-    addTask(title, day);
+    const title = prompt(`Nova tarefa para ${day}`)
+
+    if (!title || !title.trim()) return
+
+    addTask(title, day)
   }
 
   return (
     <div
       style={{
-        width: "100%", // Garante largura total
-        maxWidth: "100%", // Aumentei um pouco para caber os 7 cards folgados
-        margin: "80px auto 0", // Centraliza o bloco na tela
+        width: "100%",
+        maxWidth: "1400px",
+        margin: "80px auto 0",
         padding: "0 16px",
         boxSizing: "border-box",
       }}
@@ -33,92 +35,82 @@ export default function Dashboard() {
       <section id="semanal">
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "12px",
-            flexWrap: "nowrap",
-            overflowX: "auto",
-            paddingBottom: "20px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "16px",
+            width: "100%",
           }}
         >
           {diasDaSemana.map((dia, i) => {
-            const isToday = i === todayIndex;
-            const dayTasks = tasks.filter((t) => t.day === dia);
+            const isToday = i === todayIndex
+            const dayTasks = tasks.filter((t) => t.day === dia)
 
             return (
               <div
                 key={dia}
                 style={{
-                  flex: "1 1 0", // ← cresce igualmente
-                  minWidth: "100px", // ← mínimo antes de rolar
-                  maxWidth: "180px", // ← não estica demais em telas grandes
-                  minHeight: "210px",
+                  minHeight: "240px",
                   background: isToday ? "#1e1d2e" : "#1a1a1a",
                   border: isToday
                     ? "1px solid rgba(127,119,221,0.6)"
                     : "1px solid #2a2a2a",
-                  borderRadius: "12px",
-                  padding: "14px 12px",
+                  borderRadius: "14px",
+                  padding: "14px",
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "center",
-                  transition: "border-color 0.2s",
-                  flexShrink: 0,
+                  boxSizing: "border-box",
                 }}
               >
-                {/* Badge "Hoje" */}
-                {isToday && (
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: "13px",
-                      fontWeight: 500,
-                      color: "#7F77DD",
-                      letterSpacing: "0.8px",
-                      textTransform: "uppercase",
-                      marginBottom: "4px",
-                    }}
-                  ></span>
-                )}
-
-                {/* Nome do dia */}
-                <h3
+                {/* TOPO */}
+                <div
                   style={{
-                    margin: "0 0 10px",
-                    fontFamily: "'Syne', sans-serif",
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    color: "#f0f0f0",
-                    letterSpacing: "0.3px",
-                  }}
-                >
-                  {dia}
-                </h3>
-
-                {/* Botão adicionar */}
-                <button
-                  onClick={() => handleAddTask(dia)}
-                  style={{
-                    width: "28px",
-                    height: "28px",
-                    background: "rgba(127,119,221,0.12)",
-                    border: "1px solid rgba(127,119,221,0.3)",
-                    borderRadius: "8px",
-                    color: "#7F77DD",
-                    fontSize: "16px",
-                    cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    lineHeight: 1,
-                    transition: "background 0.15s",
+                    justifyContent: "space-between",
+                    marginBottom: "14px",
                   }}
                 >
-                  +
-                </button>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      color: "#f0f0f0",
+                      fontFamily: "'Syne', sans-serif",
+                    }}
+                  >
+                    {dia}
+                  </h3>
 
-                {/* Lista de tarefas */}
-                <div style={{ width: "100%", marginTop: "6px" }}>
+                  <button
+                    onClick={() => handleAddTask(dia)}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "8px",
+                      border: "1px solid rgba(127,119,221,0.3)",
+                      background: "rgba(127,119,221,0.12)",
+                      color: "#7F77DD",
+                      cursor: "pointer",
+                      fontSize: "18px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* TAREFAS */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    width: "100%",
+                  }}
+                >
                   {dayTasks.map((task) => (
                     <div
                       key={task.id}
@@ -126,62 +118,65 @@ export default function Dashboard() {
                       style={{
                         width: "100%",
                         background: "#242424",
-                        border: "1px solid #2e2e2e",
-                        borderRadius: "8px",
-                        padding: "6px 8px",
-                        marginTop: "6px",
-                        fontSize: "15px",
-                        fontFamily: "'DM Sans', sans-serif",
-                        color: task.done ? "#555" : "#ccc",
+                        border: "1px solid #2f2f2f",
+                        borderRadius: "10px",
+                        padding: "10px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
                         cursor: "pointer",
                         boxSizing: "border-box",
+                        gap: "8px",
                       }}
                     >
+                      {/* ESQUERDA */}
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
+                          gap: "8px",
                           flex: 1,
                           minWidth: 0,
                         }}
                       >
                         <span
                           style={{
-                            width: "7px",
-                            height: "7px",
+                            width: "8px",
+                            height: "8px",
                             borderRadius: "50%",
-                            background: task.done ? "#3a3a3a" : "#7F77DD",
+                            background: task.done ? "#555" : "#7F77DD",
                             flexShrink: 0,
-                            marginRight: "6px",
                           }}
                         />
+
                         <span
                           style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
+                            color: task.done ? "#666" : "#ddd",
+                            textDecoration: task.done
+                              ? "line-through"
+                              : "none",
+                            overflowWrap: "break-word",
+                            wordBreak: "break-word",
+                            fontSize: "14px",
+                            lineHeight: "18px",
                           }}
                         >
                           {task.title}
                         </span>
                       </div>
 
+                      {/* BOTÃO DELETE */}
                       <button
                         onClick={(e) => {
-                          e.stopPropagation();
-                          deleteTask(task.id);
+                          e.stopPropagation()
+                          deleteTask(task.id)
                         }}
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#555",
-                          fontSize: "15px",
+                          color: "#666",
                           cursor: "pointer",
-                          padding: "0 0 0 4px",
-                          lineHeight: 1,
+                          fontSize: "15px",
                           flexShrink: 0,
                         }}
                       >
@@ -191,10 +186,10 @@ export default function Dashboard() {
                   ))}
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </section>
     </div>
-  );
+  )
 }

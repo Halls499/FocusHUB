@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState } from "react"
 
 type Expense = {
-  id: string;
-  name: string;
-  value: number;
-  status: "pago" | "planejado" | "em andamento";
-};
+  id: string
+  name: string
+  value: number
+  status: "pago" | "planejado" | "em andamento"
+}
 
 const statusConfig = {
   pago: {
@@ -26,21 +26,22 @@ const statusConfig = {
     bg: "rgba(239,159,39,0.1)",
     border: "rgba(239,159,39,0.25)",
   },
-};
+}
 
-const ICONS = ["💳", "🏠", "🚗", "🍔", "📱", "🎮", "💊", "📚", "✈️", "🛍️"];
+const ICONS = ["💳", "🏠", "🚗", "🍔", "📱", "🎮", "💊", "📚", "✈️", "🛍️"]
 
 function fmt(v: number) {
-  return "R$ " + v.toFixed(2).replace(".", ",");
+  return "R$ " + v.toFixed(2).replace(".", ",")
 }
 
 export default function Gastos() {
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [name, setName] = useState("");
-  const [value, setValue] = useState("");
+  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [name, setName] = useState("")
+  const [value, setValue] = useState("")
 
   function addExpense() {
-    if (!name.trim() || !value) return;
+    if (!name.trim() || !value) return
+
     setExpenses([
       ...expenses,
       {
@@ -49,72 +50,93 @@ export default function Gastos() {
         value: Number(value),
         status: "planejado",
       },
-    ]);
-    setName("");
-    setValue("");
+    ])
+
+    setName("")
+    setValue("")
   }
 
   function deleteExpense(id: string) {
-    setExpenses(expenses.filter((e) => e.id !== id));
+    setExpenses(expenses.filter((e) => e.id !== id))
   }
 
   function changeStatus(id: string, status: Expense["status"]) {
-    setExpenses(expenses.map((e) => (e.id === id ? { ...e, status } : e)));
+    setExpenses(expenses.map((e) => (e.id === id ? { ...e, status } : e)))
   }
 
-  const total = expenses.reduce((a, e) => a + e.value, 0);
+  const total = expenses.reduce((a, e) => a + e.value, 0)
+
   const pago = expenses
     .filter((e) => e.status === "pago")
-    .reduce((a, e) => a + e.value, 0);
+    .reduce((a, e) => a + e.value, 0)
+
   const pend = expenses
     .filter((e) => e.status !== "pago")
-    .reduce((a, e) => a + e.value, 0);
+    .reduce((a, e) => a + e.value, 0)
 
   return (
     <div
       style={{
-        maxWidth: "860px",
+        width: "100%",
+        maxWidth: "1100px",
         margin: "80px auto 0",
-        padding: "32px 28px",
+        padding: "24px 16px",
+        boxSizing: "border-box",
         fontFamily: "'DM Sans', sans-serif",
       }}
     >
-      {/* Título */}
-      <p
+      {/* TÍTULO */}
+      <div style={{ marginBottom: "28px" }}>
+        <p
+          style={{
+            fontFamily: "'Syne', sans-serif",
+            fontSize: "clamp(28px, 5vw, 36px)",
+            fontWeight: 800,
+            color: "#f0f0f0",
+            margin: "0 0 4px",
+          }}
+        >
+          Gastos
+        </p>
+
+        <p
+          style={{
+            fontSize: "14px",
+            color: "#666",
+            margin: 0,
+          }}
+        >
+          Controle seus gastos e receitas
+        </p>
+      </div>
+
+      {/* FORMULÁRIO */}
+      <div
         style={{
-          fontFamily: "'Syne', sans-serif",
-          fontSize: 26,
-          fontWeight: 800,
-          color: "#f0f0f0",
-          margin: "0 0 4px",
-          letterSpacing: "-.4px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "12px",
+          marginBottom: "28px",
         }}
       >
-        Gastos
-      </p>
-      <p style={{ fontSize: 13, color: "#555", margin: "0 0 28px" }}>
-        Controle seus gastos e receitas
-      </p>
-
-      {/* Formulário */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 28 }}>
         <input
           placeholder="Nome do gasto"
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addExpense()}
           style={{
-            flex: 1,
             background: "#1a1a1a",
             border: "1px solid #2a2a2a",
-            borderRadius: 10,
-            padding: "10px 14px",
-            fontSize: 14,
+            borderRadius: "12px",
+            padding: "12px 14px",
+            fontSize: "14px",
             color: "#e0e0e0",
             outline: "none",
-            fontFamily: "'DM Sans', sans-serif",
+            width: "100%",
+            boxSizing: "border-box",
           }}
         />
+
         <input
           placeholder="R$ 0,00"
           type="number"
@@ -122,43 +144,44 @@ export default function Gastos() {
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addExpense()}
           style={{
-            width: 140,
             background: "#1a1a1a",
             border: "1px solid #2a2a2a",
-            borderRadius: 10,
-            padding: "10px 14px",
-            fontSize: 14,
+            borderRadius: "12px",
+            padding: "12px 14px",
+            fontSize: "14px",
             color: "#e0e0e0",
             outline: "none",
-            fontFamily: "'DM Sans', sans-serif",
+            width: "100%",
+            boxSizing: "border-box",
           }}
         />
+
         <button
           onClick={addExpense}
           style={{
             background: "rgba(127,119,221,0.15)",
             border: "1px solid rgba(127,119,221,0.4)",
-            borderRadius: 10,
+            borderRadius: "12px",
             color: "#a89fe8",
             fontFamily: "'Syne', sans-serif",
-            fontSize: 14,
+            fontSize: "14px",
             fontWeight: 700,
-            padding: "10px 20px",
+            padding: "12px",
             cursor: "pointer",
-            whiteSpace: "nowrap",
+            width: "100%",
           }}
         >
           + Adicionar
         </button>
       </div>
 
-      {/* Resumo */}
+      {/* RESUMO */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: 10,
-          marginBottom: 28,
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: "12px",
+          marginBottom: "28px",
         }}
       >
         {[
@@ -171,27 +194,29 @@ export default function Gastos() {
             style={{
               background: "#1a1a1a",
               border: "1px solid #2a2a2a",
-              borderRadius: 12,
-              padding: "14px 16px",
+              borderRadius: "14px",
+              padding: "16px",
             }}
           >
             <div
               style={{
-                fontSize: 11,
-                color: "#555",
-                letterSpacing: ".6px",
+                fontSize: "11px",
+                color: "#666",
+                letterSpacing: ".8px",
                 textTransform: "uppercase",
-                marginBottom: 6,
+                marginBottom: "8px",
               }}
             >
               {s.label}
             </div>
+
             <div
               style={{
                 fontFamily: "'Syne', sans-serif",
-                fontSize: 22,
+                fontSize: "clamp(22px, 4vw, 28px)",
                 fontWeight: 800,
                 color: s.color,
+                wordBreak: "break-word",
               }}
             >
               {s.value}
@@ -200,121 +225,144 @@ export default function Gastos() {
         ))}
       </div>
 
-      {/* Lista */}
+      {/* LISTA */}
       {expenses.length === 0 ? (
         <div
           style={{
             textAlign: "center",
-            padding: "48px 0",
-            color: "#444",
-            fontSize: 14,
+            padding: "60px 20px",
+            color: "#555",
           }}
         >
-          <div style={{ fontSize: 32, marginBottom: 12 }}>💸</div>
-          Nenhum gasto adicionado ainda
+          <div style={{ fontSize: "40px", marginBottom: "12px" }}>💸</div>
+
+          <p style={{ margin: 0 }}>Nenhum gasto adicionado ainda</p>
         </div>
       ) : (
-        expenses.map((exp, i) => {
-          return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          {expenses.map((exp, i) => (
             <div
               key={exp.id}
               style={{
                 background: "#1a1a1a",
                 border: "1px solid #2a2a2a",
-                borderRadius: 12,
-                padding: "14px 16px",
-                marginBottom: 10,
+                borderRadius: "14px",
+                padding: "14px",
                 display: "flex",
+                flexWrap: "wrap",
                 alignItems: "center",
-                gap: 14,
+                gap: "14px",
               }}
             >
-              {/* Ícone */}
+              {/* ÍCONE */}
               <div
                 style={{
-                  width: 38,
-                  height: 38,
+                  width: "42px",
+                  height: "42px",
                   background: "#242424",
-                  borderRadius: 10,
+                  borderRadius: "12px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 16,
+                  fontSize: "18px",
                   flexShrink: 0,
                 }}
               >
                 {ICONS[i % ICONS.length]}
               </div>
 
-              {/* Info */}
-              <div style={{ flex: 1, minWidth: 0 }}>
+              {/* INFO */}
+              <div
+                style={{
+                  flex: 1,
+                  minWidth: "180px",
+                }}
+              >
                 <p
                   style={{
                     fontFamily: "'Syne', sans-serif",
-                    fontSize: 15,
+                    fontSize: "15px",
                     fontWeight: 700,
                     color: "#f0f0f0",
-                    margin: "0 0 3px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
+                    margin: "0 0 4px",
+                    wordBreak: "break-word",
                   }}
                 >
                   {exp.name}
                 </p>
-                <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
+
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#888",
+                    margin: 0,
+                  }}
+                >
                   {fmt(exp.value)}
                 </p>
               </div>
 
-              {/* Status */}
-              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+              {/* STATUS */}
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "6px",
+                }}
+              >
                 {(Object.keys(statusConfig) as Expense["status"][]).map((s) => {
-                  const c = statusConfig[s];
-                  const active = exp.status === s;
+                  const c = statusConfig[s]
+                  const active = exp.status === s
+
                   return (
                     <button
                       key={s}
                       onClick={() => changeStatus(exp.id, s)}
                       style={{
-                        fontSize: 11,
+                        fontSize: "11px",
                         fontWeight: 500,
-                        padding: "5px 10px",
-                        borderRadius: 20,
+                        padding: "6px 10px",
+                        borderRadius: "20px",
                         cursor: "pointer",
-                        fontFamily: "'DM Sans', sans-serif",
                         color: c.color,
                         background: active
                           ? c.bg.replace("0.1", "0.25").replace("0.12", "0.25")
                           : c.bg,
                         border: `1px solid ${active ? c.color : c.border}`,
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {c.label}
                     </button>
-                  );
+                  )
                 })}
               </div>
 
-              {/* Deletar */}
+              {/* DELETE */}
               <button
                 onClick={() => deleteExpense(exp.id)}
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#444",
-                  fontSize: 16,
+                  color: "#555",
+                  fontSize: "18px",
                   cursor: "pointer",
-                  padding: 4,
+                  padding: "4px",
                   flexShrink: 0,
                 }}
               >
                 ✕
               </button>
             </div>
-          );
-        })
+          ))}
+        </div>
       )}
     </div>
-  );
+  )
 }

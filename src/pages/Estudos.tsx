@@ -1,140 +1,659 @@
-import { useState } from "react"
+import { useState } from "react";
 
-type Subject = { id: string; name: string; schedule: string }
-type Activity = { id: string; title: string; subject: string; dueDate: string; urgency: "baixa" | "média" | "alta" }
+type Subject = {
+  id: string;
+  name: string;
+  schedule: string;
+};
+
+type Activity = {
+  id: string;
+  title: string;
+  subject: string;
+  dueDate: string;
+  urgency: "baixa" | "média" | "alta";
+};
 
 const urgencyConfig = {
-  baixa: { color: "#1D9E75", bg: "rgba(29,158,117,0.12)",  border: "rgba(29,158,117,0.3)"  },
-  média: { color: "#EF9F27", bg: "rgba(239,159,39,0.12)",  border: "rgba(239,159,39,0.3)"  },
-  alta:  { color: "#E74C3C", bg: "rgba(231,76,60,0.12)",   border: "rgba(231,76,60,0.3)"   },
-}
+  baixa: {
+    label: "Baixa",
+    color: "#1D9E75",
+    bg: "rgba(29,158,117,0.12)",
+    border: "rgba(29,158,117,0.3)",
+  },
+  média: {
+    label: "Média",
+    color: "#EF9F27",
+    bg: "rgba(239,159,39,0.12)",
+    border: "rgba(239,159,39,0.3)",
+  },
+  alta: {
+    label: "Alta",
+    color: "#E74C3C",
+    bg: "rgba(231,76,60,0.12)",
+    border: "rgba(231,76,60,0.3)",
+  },
+};
 
-const SUBJECT_ICONS = ["📘","📗","📙","📕","📓","🔬","🔭","🎨","🗺️","💻"]
+const SUBJECT_ICONS = [
+  "📘",
+  "📗",
+  "📙",
+  "📕",
+  "📓",
+  "🔬",
+  "🔭",
+  "🎨",
+  "🗺️",
+  "💻",
+];
 
 function fmtDate(d: string) {
-  if (!d) return ""
-  const [y, m, dd] = d.split("-")
-  return `${dd}/${m}/${y}`
+  if (!d) return "";
+
+  const [y, m, dd] = d.split("-");
+  return `${dd}/${m}/${y}`;
 }
 
-const input: React.CSSProperties = {
-  background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 10,
-  padding: "10px 14px", fontSize: 14, color: "#e0e0e0", outline: "none",
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  minWidth: 0,
+  boxSizing: "border-box",
+
+  background: "#1e1e1e",
+  border: "1px solid #2a2a2a",
+  borderRadius: 12,
+
+  padding: "12px 14px",
+
+  color: "#f0f0f0",
+  fontSize: 14,
   fontFamily: "'DM Sans', sans-serif",
-}
 
-const btn: React.CSSProperties = {
-  background: "rgba(127,119,221,0.15)", border: "1px solid rgba(127,119,221,0.4)",
-  borderRadius: 10, color: "#a89fe8", fontFamily: "'Syne', sans-serif",
-  fontSize: 14, fontWeight: 700, padding: "10px 20px", cursor: "pointer", whiteSpace: "nowrap",
-}
+  outline: "none",
+};
+
+const buttonStyle: React.CSSProperties = {
+  width: "100%",
+  border: "1px solid rgba(127,119,221,0.4)",
+  background: "rgba(127,119,221,0.15)",
+
+  borderRadius: 12,
+
+  padding: "12px",
+
+  color: "#a89fe8",
+  fontSize: 14,
+  fontWeight: 700,
+  fontFamily: "'Syne', sans-serif",
+
+  cursor: "pointer",
+};
+
+const sectionStyle: React.CSSProperties = {
+  background: "#161616",
+  border: "1px solid #222",
+
+  borderRadius: 18,
+
+  padding: 24,
+
+  width: "100%",
+  boxSizing: "border-box",
+
+  marginBottom: 24,
+};
 
 export default function Estudos() {
-  const [subjects, setSubjects]     = useState<Subject[]>([])
-  const [activities, setActivities] = useState<Activity[]>([])
-  const [subjectName, setSubjectName] = useState("")
-  const [schedule, setSchedule]       = useState("")
-  const [title, setTitle]             = useState("")
-  const [selectedSubject, setSelectedSubject] = useState("")
-  const [dueDate, setDueDate]         = useState("")
-  const [urgency, setUrgency]         = useState<Activity["urgency"]>("baixa")
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+
+  const [subjectName, setSubjectName] = useState("");
+  const [schedule, setSchedule] = useState("");
+
+  const [title, setTitle] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [urgency, setUrgency] = useState<Activity["urgency"]>("baixa");
 
   function addSubject() {
-    if (!subjectName.trim() || !schedule) return
-    setSubjects([...subjects, { id: crypto.randomUUID(), name: subjectName, schedule }])
-    setSubjectName(""); setSchedule("")
+    if (!subjectName.trim() || !schedule) return;
+
+    setSubjects([
+      ...subjects,
+      {
+        id: crypto.randomUUID(),
+        name: subjectName,
+        schedule,
+      },
+    ]);
+
+    setSubjectName("");
+    setSchedule("");
   }
 
   function addActivity() {
-    if (!title.trim() || !selectedSubject || !dueDate) return
-    setActivities([...activities, { id: crypto.randomUUID(), title, subject: selectedSubject, dueDate, urgency }])
-    setTitle(""); setSelectedSubject(""); setDueDate(""); setUrgency("baixa")
+    if (!title.trim() || !selectedSubject || !dueDate) return;
+
+    setActivities([
+      ...activities,
+      {
+        id: crypto.randomUUID(),
+        title,
+        subject: selectedSubject,
+        dueDate,
+        urgency,
+      },
+    ]);
+
+    setTitle("");
+    setSelectedSubject("");
+    setDueDate("");
+    setUrgency("baixa");
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: "80px auto 0", padding: "32px 28px", fontFamily: "'DM Sans', sans-serif" }}>
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 1100,
 
-      {/* Título */}
-      <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "#f0f0f0", margin: "0 0 4px", letterSpacing: "-.4px" }}>
-        Estudos
-      </p>
-      <p style={{ fontSize: 13, color: "#555", margin: "0 0 32px" }}>Organize suas matérias e atividades</p>
+        margin: "0 auto",
 
-      {/* ── MATÉRIAS ── */}
-      <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 17, fontWeight: 700, color: "#f0f0f0", margin: "0 0 14px" }}>Matérias</p>
+        padding: "40px 20px 80px",
+        boxSizing: "border-box",
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-        <input placeholder="Nome da matéria" value={subjectName} onChange={(e) => setSubjectName(e.target.value)} style={{ ...input, flex: 1 }} />
-        <input placeholder="Horário (ex: Seg 08:00)" value={schedule} onChange={(e) => setSchedule(e.target.value)} style={{ ...input, width: 200 }} />
-        <button onClick={addSubject} style={btn}>+ Adicionar matéria</button>
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
+      {/* HEADER */}
+      <div
+        style={{
+          marginBottom: 40,
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+
+            color: "#f0f0f0",
+
+            fontFamily: "'Syne', sans-serif",
+            fontSize: "clamp(28px, 5vw, 42px)",
+            fontWeight: 800,
+
+            letterSpacing: "-1px",
+          }}
+        >
+          Estudos
+        </h1>
+
+        <p
+          style={{
+            marginTop: 8,
+
+            color: "#666",
+            fontSize: 14,
+          }}
+        >
+          Gerencie suas matérias e acompanhe suas atividades
+        </p>
       </div>
 
-      {/* Grid de matérias */}
-      {subjects.length === 0 ? (
-        <p style={{ color: "#444", fontSize: 13, textAlign: "center", padding: "16px 0" }}>Nenhuma matéria adicionada</p>
-      ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 8 }}>
-          {subjects.map((s, i) => (
-            <div key={s.id} style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 12, padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, minWidth: 180 }}>
-              <div style={{ width: 34, height: 34, background: "rgba(127,119,221,0.12)", border: "1px solid rgba(127,119,221,0.25)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, flexShrink: 0 }}>
-                {SUBJECT_ICONS[i % SUBJECT_ICONS.length]}
-              </div>
-              <div>
-                <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 14, fontWeight: 700, color: "#f0f0f0", margin: 0 }}>{s.name}</p>
-                <p style={{ fontSize: 12, color: "#555", margin: "2px 0 0" }}>⏰ {s.schedule}</p>
-              </div>
-            </div>
-          ))}
+      {/* MATÉRIAS */}
+      <section style={sectionStyle}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+
+            flexWrap: "wrap",
+
+            marginBottom: 24,
+          }}
+        >
+          <div
+            style={{
+              width: 42,
+              height: 42,
+
+              borderRadius: 12,
+
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+
+              background: "rgba(127,119,221,0.1)",
+              border: "1px solid rgba(127,119,221,0.2)",
+
+              fontSize: 18,
+            }}
+          >
+            📘
+          </div>
+
+          <h2
+            style={{
+              margin: 0,
+
+              color: "#f0f0f0",
+
+              fontSize: 22,
+              fontWeight: 800,
+
+              fontFamily: "'Syne', sans-serif",
+            }}
+          >
+            Matérias
+          </h2>
+
+          <span
+            style={{
+              marginLeft: "auto",
+
+              background: "#1e1e1e",
+              border: "1px solid #2a2a2a",
+
+              borderRadius: 999,
+
+              padding: "6px 12px",
+
+              color: "#666",
+              fontSize: 12,
+            }}
+          >
+            {subjects.length} {subjects.length === 1 ? "matéria" : "matérias"}
+          </span>
         </div>
-      )}
 
-      <hr style={{ border: "none", borderTop: "1px solid #2a2a2a", margin: "28px 0" }} />
+        {/* FORM MATÉRIA */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
 
-      {/* ── ATIVIDADES ── */}
-      <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 17, fontWeight: 700, color: "#f0f0f0", margin: "0 0 14px" }}>Atividades</p>
+            gap: 12,
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
-        <input placeholder="Título da atividade" value={title} onChange={(e) => setTitle(e.target.value)} style={{ ...input, flex: 1 }} />
-        <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} style={{ ...input, width: 180 }}>
-          <option value="">Selecione a matéria</option>
-          {subjects.map((s) => <option key={s.id} value={s.name}>{s.name}</option>)}
-        </select>
-        <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} style={{ ...input, width: 150 }} />
-        <select value={urgency} onChange={(e) => setUrgency(e.target.value as Activity["urgency"])} style={{ ...input, width: 130 }}>
-          <option value="baixa">Baixa</option>
-          <option value="média">Média</option>
-          <option value="alta">Alta</option>
-        </select>
-        <button onClick={addActivity} style={btn}>+ Adicionar atividade</button>
-      </div>
+            marginBottom: 12,
+          }}
+        >
+          <input
+            placeholder="Nome da matéria"
+            value={subjectName}
+            onChange={(e) => setSubjectName(e.target.value)}
+            style={inputStyle}
+          />
 
-      {/* Lista de atividades */}
-      {activities.length === 0 ? (
-        <p style={{ color: "#444", fontSize: 13, textAlign: "center", padding: "28px 0" }}>Nenhuma atividade adicionada</p>
-      ) : (
-        activities.map((a) => {
-          const u = urgencyConfig[a.urgency]
-          return (
-            <div key={a.id} style={{ background: "#1a1a1a", border: "1px solid #2a2a2a", borderRadius: 12, padding: "14px 16px", marginBottom: 10, display: "flex", alignItems: "center", gap: 14 }}>
-              {/* Barra de urgência */}
-              <div style={{ width: 3, borderRadius: 4, alignSelf: "stretch", background: u.color, flexShrink: 0 }} />
+          <input
+            placeholder="Horário (ex: Seg 08:00)"
+            value={schedule}
+            onChange={(e) => setSchedule(e.target.value)}
+            style={inputStyle}
+          />
+        </div>
 
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 15, fontWeight: 700, color: "#f0f0f0", margin: "0 0 4px" }}>{a.title}</p>
-                <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#555" }}>
-                  <span>📘 {a.subject}</span>
-                  <span>📅 {fmtDate(a.dueDate)}</span>
-                </div>
-              </div>
+        <button onClick={addSubject} style={buttonStyle}>
+          + Adicionar matéria
+        </button>
 
-              {/* Badge urgência */}
-              <span style={{ fontSize: 11, fontWeight: 500, padding: "3px 10px", borderRadius: 20, color: u.color, background: u.bg, border: `1px solid ${u.border}`, flexShrink: 0 }}>
-                {a.urgency.charAt(0).toUpperCase() + a.urgency.slice(1)}
-              </span>
+        {/* LISTA MATÉRIAS */}
+        <div
+          style={{
+            marginTop: 22,
+          }}
+        >
+          {subjects.length === 0 ? (
+            <div
+              style={{
+                padding: "28px 0",
+                textAlign: "center",
+
+                color: "#444",
+                fontSize: 14,
+              }}
+            >
+              Nenhuma matéria adicionada ainda
             </div>
-          )
-        })
-      )}
+          ) : (
+            <div
+              style={{
+                display: "grid",
+
+                gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+
+                gap: 14,
+              }}
+            >
+              {subjects.map((subject, index) => (
+                <div
+                  key={subject.id}
+                  style={{
+                    background: "#1e1e1e",
+                    border: "1px solid #2a2a2a",
+
+                    borderRadius: 14,
+
+                    padding: 16,
+
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+
+                    minWidth: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 42,
+                      height: 42,
+
+                      flexShrink: 0,
+
+                      borderRadius: 10,
+
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+
+                      background: "rgba(127,119,221,0.1)",
+
+                      border: "1px solid rgba(127,119,221,0.2)",
+
+                      fontSize: 18,
+                    }}
+                  >
+                    {SUBJECT_ICONS[index % SUBJECT_ICONS.length]}
+                  </div>
+
+                  <div
+                    style={{
+                      minWidth: 0,
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+
+                        color: "#f0f0f0",
+
+                        fontSize: 14,
+                        fontWeight: 700,
+
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {subject.name}
+                    </p>
+
+                    <p
+                      style={{
+                        margin: "5px 0 0",
+
+                        color: "#666",
+                        fontSize: 12,
+                      }}
+                    >
+                      ⏰ {subject.schedule}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ATIVIDADES */}
+      <section style={sectionStyle}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+
+            flexWrap: "wrap",
+
+            marginBottom: 24,
+          }}
+        >
+          <div
+            style={{
+              width: 42,
+              height: 42,
+
+              borderRadius: 12,
+
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+
+              background: "rgba(239,159,39,0.1)",
+              border: "1px solid rgba(239,159,39,0.2)",
+
+              fontSize: 18,
+            }}
+          >
+            📋
+          </div>
+
+          <h2
+            style={{
+              margin: 0,
+
+              color: "#f0f0f0",
+
+              fontSize: 22,
+              fontWeight: 800,
+
+              fontFamily: "'Syne', sans-serif",
+            }}
+          >
+            Atividades
+          </h2>
+
+          <span
+            style={{
+              marginLeft: "auto",
+
+              background: "#1e1e1e",
+              border: "1px solid #2a2a2a",
+
+              borderRadius: 999,
+
+              padding: "6px 12px",
+
+              color: "#666",
+              fontSize: 12,
+            }}
+          >
+            {activities.length}{" "}
+            {activities.length === 1 ? "atividade" : "atividades"}
+          </span>
+        </div>
+
+        {/* FORM ATIVIDADES */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+
+            gap: 12,
+
+            marginBottom: 12,
+          }}
+        >
+          <input
+            placeholder="Título da atividade"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={inputStyle}
+          />
+
+          <select
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+            style={inputStyle}
+          >
+            <option value="">Selecione a matéria</option>
+
+            {subjects.map((s) => (
+              <option key={s.id} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            style={inputStyle}
+          />
+
+          <select
+            value={urgency}
+            onChange={(e) => setUrgency(e.target.value as Activity["urgency"])}
+            style={inputStyle}
+          >
+            <option value="baixa">🟢 Baixa urgência</option>
+
+            <option value="média">🟡 Média urgência</option>
+
+            <option value="alta">🔴 Alta urgência</option>
+          </select>
+        </div>
+
+        <button onClick={addActivity} style={buttonStyle}>
+          + Adicionar atividade
+        </button>
+
+        {/* LISTA ATIVIDADES */}
+        <div
+          style={{
+            marginTop: 22,
+          }}
+        >
+          {activities.length === 0 ? (
+            <div
+              style={{
+                padding: "28px 0",
+                textAlign: "center",
+
+                color: "#444",
+                fontSize: 14,
+              }}
+            >
+              Nenhuma atividade adicionada ainda
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+              }}
+            >
+              {activities.map((activity) => {
+                const urgencyData = urgencyConfig[activity.urgency];
+
+                return (
+                  <div
+                    key={activity.id}
+                    style={{
+                      background: "#1e1e1e",
+                      border: "1px solid #2a2a2a",
+
+                      borderRadius: 14,
+
+                      padding: 18,
+
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 16,
+
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 4,
+                        alignSelf: "stretch",
+
+                        borderRadius: 999,
+
+                        background: urgencyData.color,
+                      }}
+                    />
+
+                    <div
+                      style={{
+                        flex: 1,
+                        minWidth: 220,
+                      }}
+                    >
+                      <p
+                        style={{
+                          margin: 0,
+
+                          color: "#f0f0f0",
+
+                          fontSize: 16,
+                          fontWeight: 700,
+
+                          fontFamily: "'Syne', sans-serif",
+                        }}
+                      >
+                        {activity.title}
+                      </p>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 14,
+
+                          marginTop: 8,
+
+                          color: "#666",
+                          fontSize: 13,
+                        }}
+                      >
+                        <span>📘 {activity.subject}</span>
+
+                        <span>📅 {fmtDate(activity.dueDate)}</span>
+                      </div>
+                    </div>
+
+                    <span
+                      style={{
+                        flexShrink: 0,
+
+                        borderRadius: 999,
+
+                        padding: "6px 12px",
+
+                        color: urgencyData.color,
+
+                        background: urgencyData.bg,
+
+                        border: `1px solid ${urgencyData.border}`,
+
+                        fontSize: 12,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {urgencyData.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
     </div>
-  )
+  );
 }
